@@ -133,4 +133,5 @@ dmypy.json
 
 *.csv
 
+02_movies_admin/static/
 /static/
