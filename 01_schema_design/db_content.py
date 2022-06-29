@@ -7,8 +7,11 @@ import psycopg2
 from faker import Faker
 from psycopg2.extras import execute_batch
 
+"""
+Скрипт для заполнения базы данными
+"""
 
-load_dotenv('./config/.env')
+load_dotenv('./02_movies_admin/config/.env')
 fake = Faker()
 
 dsn = {

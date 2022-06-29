@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -15,14 +16,14 @@ class UUIDMixin(models.Model):
 
 
 class CreatedMixin(models.Model):
-    created = models.DateTimeField(_('date and time of creating'), auto_now_add=True)
+    created = models.DateTimeField(_('date and time of creating'), default=datetime.datetime.utcnow)
 
     class Meta:
         abstract = True
 
 
 class ModifiedMixin(models.Model):
-    modified = models.DateTimeField(_('date and time of modifying'), auto_now=True)
+    modified = models.DateTimeField(_('date and time of modifying'), default=datetime.datetime.utcnow)
 
     class Meta:
         abstract = True
@@ -30,7 +31,7 @@ class ModifiedMixin(models.Model):
 
 class Genre(UUIDMixin, CreatedMixin, ModifiedMixin):
     name = models.TextField(_('name'))
-    description = models.TextField(_('description'), blank=True)
+    description = models.TextField(_('description'), null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -54,14 +55,13 @@ class Person(UUIDMixin, CreatedMixin, ModifiedMixin):
 
 
 class PersonFilmWork(UUIDMixin, CreatedMixin):
-    film_work = models.ForeignKey('movies.FilmWork', on_delete=models.CASCADE, db_index=False)
-    person = models.ForeignKey('movies.Person', on_delete=models.CASCADE, db_index=False)
+    film_work = models.ForeignKey('movies.FilmWork', on_delete=models.CASCADE, db_index=True)
+    person = models.ForeignKey('movies.Person', on_delete=models.CASCADE, db_index=True)
     role = models.TextField(_('role'))
 
     class Meta:
         db_table = "content\".\"person_film_work"
         unique_together = ('film_work', 'person')
-        indexes = (models.Index(fields=['film_work', 'person']),)
 
 
 class GenreFilmWork(UUIDMixin, CreatedMixin):
@@ -78,7 +78,7 @@ class FilmWork(UUIDMixin, CreatedMixin, ModifiedMixin):
     title = models.TextField(_('title'), max_length=255)
     description = models.TextField(_('description'), null=True, blank=True)
     creation_date = models.DateField(_('creation date'), null=True, blank=True)
-    rating = models.FloatField(_('rating'), blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    rating = models.FloatField(_('rating'), null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     type = models.CharField(_('type'), max_length=15, choices=FilmWorkType.choices)
     genre = models.ManyToManyField('movies.Genre', through='movies.GenreFilmWork')
     person = models.ManyToManyField('movies.Person', through='movies.PersonFilmWork')
