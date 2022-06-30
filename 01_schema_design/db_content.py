@@ -1,9 +1,10 @@
-from datetime import datetime, date
-from dotenv import load_dotenv
 import os
 import random
 import uuid
+from datetime import date, datetime
+
 import psycopg2
+from dotenv import load_dotenv
 from faker import Faker
 from psycopg2.extras import execute_batch
 
@@ -53,8 +54,10 @@ def generate_data():
 
         # Заполнение таблицы FilmWork
         film_work_ids = [str(uuid.uuid4()) for _ in range(FILM_WORK_COUNT)]
-        query = 'INSERT INTO film_work (id, title, description, creation_date, rating, type, created, modified) ' \
-                'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
+        query = (
+            'INSERT INTO film_work (id, title, description, creation_date, rating, type, created, modified) '
+            'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
+        )
         data = [
             (
                 pk,
@@ -64,8 +67,9 @@ def generate_data():
                 fake.pyfloat(min_value=0, max_value=100, right_digits=1),
                 fake.random_element(elements=('movie', 'tv_show')),
                 now,
-                now
-            ) for pk in film_work_ids
+                now,
+            )
+            for pk in film_work_ids
         ]
         print('Сгенерировали данные для FilmWork')
         execute_batch(cur, query, data, page_size=PAGE_SIZE)

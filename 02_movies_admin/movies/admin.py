@@ -1,13 +1,12 @@
 from django.contrib import admin
 from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy as _
-
-from movies.models import Genre, FilmWork, GenreFilmWork, Person, PersonFilmWork
+from movies.models import FilmWork, Genre, GenreFilmWork, Person, PersonFilmWork
 
 
 class GenreFilmWorkInline(admin.TabularInline):
     model = GenreFilmWork
-    autocomplete_fields = ('genre', )
+    autocomplete_fields = ('genre',)
     list_prefetch_related = (Prefetch('film_work'), Prefetch('genre'))
     verbose_name = _('genre of filmwork')
     verbose_name_plural = _('genres of filmwork')
@@ -16,7 +15,7 @@ class GenreFilmWorkInline(admin.TabularInline):
 
 class PersonFilmWorkInline(admin.TabularInline):
     model = PersonFilmWork
-    autocomplete_fields = ('person', )
+    autocomplete_fields = ('person',)
     list_prefetch_related = (Prefetch('film_work'), Prefetch('person'))
     verbose_name = _('person in filmwork')
     verbose_name_plural = _('persons in filmwork')
@@ -36,7 +35,7 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    search_fields = ('full_name', )
+    search_fields = ('full_name',)
     list_display = ('full_name', 'created', 'modified')
     list_filter = ()
     readonly_fields = ('created', 'modified')

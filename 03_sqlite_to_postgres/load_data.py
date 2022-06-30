@@ -1,13 +1,12 @@
 import datetime
 import os
-import uuid
 import sqlite3
+import uuid
 from contextlib import closing
 from typing import List, Union
 
-from dotenv import load_dotenv
-
 import psycopg2
+from dotenv import load_dotenv
 from psycopg2.extras import execute_batch
 from pydantic.main import BaseModel
 
@@ -50,7 +49,6 @@ class PersonFilmWork(BaseModel):
 
 
 class PostgresService:
-
     def __init__(self, dsn: dict):
         self.dsn = dsn
         self.connection = None
@@ -94,7 +92,6 @@ class PostgresService:
 
 
 class SQLiteService:
-
     def __init__(self, dsn: dict, size: int = 1000):
         self.dsn = dsn
         self.size = size
@@ -156,8 +153,9 @@ def load_from_sqlite(postgres_dsn: dict, sqllite_dsn: dict, size: int):
 
             delimiters = ', '.join(['%s' for _ in range(len(model.__fields__))])
             # запрос на вставку данных в postgresql
-            query_to_migrate = f'INSERT INTO content.{table} ({fields}) ' \
-                               f'VALUES ({delimiters}) ON CONFLICT (id) DO NOTHING'
+            query_to_migrate = (
+                f'INSERT INTO content.{table} ({fields}) ' f'VALUES ({delimiters}) ON CONFLICT (id) DO NOTHING'
+            )
 
             data = list()
 

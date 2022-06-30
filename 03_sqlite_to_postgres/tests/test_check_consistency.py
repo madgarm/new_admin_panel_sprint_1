@@ -1,8 +1,8 @@
 import os
 
 import pytest
-from load_data import PostgresService, SQLiteService, Person, Genre, FilmWork, GenreFilmWork, PersonFilmWork
 from dotenv import load_dotenv
+from load_data import FilmWork, Genre, GenreFilmWork, Person, PersonFilmWork, PostgresService, SQLiteService
 
 
 @pytest.fixture(autouse=True)

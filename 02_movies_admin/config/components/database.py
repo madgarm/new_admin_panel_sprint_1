@@ -8,9 +8,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('DB_PORT'),
-        'OPTIONS': {
-           'options': '-c search_path=public,content -c log_statement=mod'
-        }
+        'OPTIONS': {'options': '-c search_path=public,content -c log_statement=mod'},
     }
 }
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

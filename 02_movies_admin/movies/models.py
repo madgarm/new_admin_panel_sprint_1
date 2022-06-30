@@ -1,10 +1,9 @@
 import datetime
 import uuid
-from django.core.validators import MinValueValidator, MaxValueValidator
+
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-
 from movies.constants import FilmWorkType
 
 
@@ -78,7 +77,9 @@ class FilmWork(UUIDMixin, CreatedMixin, ModifiedMixin):
     title = models.TextField(_('title'), max_length=255)
     description = models.TextField(_('description'), null=True, blank=True)
     creation_date = models.DateField(_('creation date'), null=True, blank=True)
-    rating = models.FloatField(_('rating'), null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    rating = models.FloatField(
+        _('rating'), null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
     type = models.CharField(_('type'), max_length=15, choices=FilmWorkType.choices)
     genre = models.ManyToManyField('movies.Genre', through='movies.GenreFilmWork')
     person = models.ManyToManyField('movies.Person', through='movies.PersonFilmWork')
