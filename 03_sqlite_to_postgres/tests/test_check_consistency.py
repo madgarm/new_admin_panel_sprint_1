@@ -7,28 +7,24 @@ from load_data import FilmWork, Genre, GenreFilmWork, Person, PersonFilmWork, Po
 
 @pytest.fixture(autouse=True)
 def load_env():
-    load_dotenv('../../02_movies_admin/config/.env')
+    dotenv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '.env')
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path)
 
 
 @pytest.fixture
-def postgres_db():
-    postgres_dsn = {
-        'dbname': os.environ.get('DB_NAME'),
-        'user': os.environ.get('DB_USER'),
-        'password': os.environ.get('DB_PASSWORD'),
-        'host': os.environ.get('DB_HOST'),
-        'port': os.environ.get('DB_PORT'),
-        'options': '-c search_path=content',
-    }
+def postgres_db(load_env):
+    postgres_dsn = (
+        f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@'
+        f'{os.environ["DB_HOST"]}:{os.environ.get("DB_PORT", 5432)}/{os.environ["DB_NAME"]}'
+    )
     return PostgresService(dsn=postgres_dsn)
 
 
 @pytest.fixture
 def sqllite_db():
-    sqllite_dsn = {
-        'database': '../' + os.environ.get('SQLLITE_FILENAME'),
-    }
-    return SQLiteService(dsn=sqllite_dsn)
+    sqllite_db = f'../{os.environ["SQLITE_FILENAME"]}'
+    return SQLiteService(database=sqllite_db)
 
 
 @pytest.fixture
